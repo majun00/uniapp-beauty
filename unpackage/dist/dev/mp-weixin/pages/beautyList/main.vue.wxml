@@ -1,0 +1,10 @@
+<template name="ff917480">
+  <view class="_div data-v-f208bf54">
+    <view class="_div data-v-f208bf54 card" wx:key="index" key="{{index}}" wx:for="{{items}}" wx:for-index="index" wx:for-item="item">
+      <view bindtap="handleProxy" data-eventid="{{'0-'+index}}" data-comkey="{{$k}}" class="_div data-v-f208bf54">
+        <image class="_image data-v-f208bf54 image" mode="aspectFill" src="{{item.url}}"></image>
+        <view class="_div data-v-f208bf54 title">{{item.title}}</view>
+      </view>
+    </view>
+  </view>
+</template>

@@ -1,0 +1,4 @@
+require("common/manifest.js");
+require("common/vendor.js");
+global.webpackJsonp([2],[,,,function(e,t,u){"use strict";var n=l(u(1)),o=l(u(5));function l(e){return e&&e.__esModule?e:{default:e}}u(0).default;n.default.config.productionTip=!1,o.default.mpType="app",new n.default(o.default).$mount()},,function(e,t,u){"use strict";Object.defineProperty(t,"__esModule",{value:!0});var n=u(8),o=u.n(n),l=!1;var r=function(e){l||u(6)},s=u(2)(o.a,null,r,null,null);s.options.__file="..\\..\\..\\..\\..\\git\\test\\uniapp\\App.vue",s.esModule&&Object.keys(s.esModule).some(function(e){return"default"!==e&&"__"!==e.substr(0,2)})&&console.error("named exports are not supported in *.vue files."),t.default=s.exports},function(e,t){},,function(e,t,u){"use strict";Object.defineProperty(t,"__esModule",{value:!0});u(0).default;t.default={}}],[3]);
+//# sourceMappingURL=.sourcemap/app.js.map
