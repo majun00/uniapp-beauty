@@ -1,97 +1,83 @@
 <template>
-    <div>
-        <div class="card" v-for="(item, index) in items" :key='index'>
-            <div @click='onItemClick(item.url)'>
-                <image class="image" mode="aspectFill" :src="item.url" />
-                <div class="title">{{item.title}}</div>
-            </div>
-        </div>
+  <div>
+		<div class='query'>
+			<p class='query-msg'>输入知乎问题网址后爬取图片,如下</p>
+			<input class='query-input' type="text" :placeholder="cUrl">
+			<div class="btn" @click='init()'>确 认</div>
+		</div>
+    <div
+      class="card"
+      v-for="(item, index) in items"
+      :key='index'
+    >
+      <div @click='onItemClick(item.url)'>
+        <img
+          class="image"
+          :src="`http://localhost:3000/img?url=${item}`"
+          alt=""
+        >
+        <!-- <div class="title">{{item.title}}</div> -->
+      </div>
     </div>
+  </div>
 </template>
 
 <script>
-import Constant from '@/utils/constant.js'
 export default {
-    data() {
-        return {
-            items: [],
-            hidden: false,
-            mCurrentPage: 0,
-            mUrl: [],
-            mDesc: [],
-            mWho: [],
-            mTimes: [],
-            mTitles: [],
+  data() {
+    return {
+      items: [],
+      hidden: false,
+      mCurrentPage: 1,
+      mUrl: [],
+      mDesc: [],
+      mWho: [],
+      mTimes: [],
+      mTitles: [],
+      cUrl: 'https://www.zhihu.com/question/29024583'
+    }
+  },
+  mounted() {
+    // this.init(this.mCurrentPage)
+  },
+  onReachBottom() {
+    this.hidden = false
+    this.init(this.mCurrentPage + 1)
+  },
+  methods: {
+    init(pageIndex=1) {
+      const that = this
+
+      wx.showToast({
+        title: '加载中',
+        icon: 'loading'
+      });
+
+      const data = {
+        pageIndex: pageIndex,
+        url: this.cUrl
+      }
+
+      wx.request({
+        url: 'http://localhost:3000',
+        method: 'POST',
+        data: data,
+        success: function (res) {
+          that.items.push(...res.data.list)
+          wx.hideToast();
         }
+      });
+
     },
-    mounted() {
-        this.init(this.mCurrentPage + 1)
+
+    onItemClick(url) {
+      // const that = this
+      // wx.previewImage({
+      //   current: url,
+      //   urls: that.mUrl
+      // })
     },
-    onReachBottom() {
-        this.hidden = false
-        this.init(this.mCurrentPage + 1)
-    },
-    methods: {
-        init(targetPage) {
-            const that = this
-
-            wx.showToast({
-                title: '加载中',
-                icon: 'loading'
-            });
-
-            wx.request({
-                url: Constant.GET_MEIZHI_URL + targetPage,
-                header: {
-                    "Content-Type": "application/json"
-                },
-                success: function (res) {
-                    if (res == null ||
-                        res.data == null ||
-                        res.data.results == null ||
-                        res.data.results.length <= 0) {
-                        return;
-                    }
-
-                    for (var i = 0; i < res.data.results.length; i++) {
-                        that.bindData(res.data.results[i]);
-                    }
-
-                    var itemList = [];
-                    for (var i = 0; i < that.mUrl.length; i++) {
-                        itemList.push({ url: that.mUrl[i], desc: that.mDesc[i], who: that.mWho[i], time: that.mTimes[i], title: that.mTitles[i] });
-                    }
-
-                    that.items = itemList
-                    that.hidden = true
-                    that.mCurrentPage = targetPage;
-                    wx.hideToast();
-                }
-            });
-
-        },
-
-        bindData(itemData) {
-            let url = itemData.url.replace("//ww", "//ws");
-            let desc = itemData.desc;
-            let who = itemData.who;
-            let times = itemData.publishedAt.split("T")[0];
-
-            this.mUrl.push(url);
-            this.mDesc.push(desc);
-            this.mWho.push(who);
-            this.mTimes.push(times);
-            this.mTitles.push(times + " — " + who);
-        },
-
-        onItemClick(url) {
-            const that = this
-            wx.previewImage({
-                current: url,
-                urls: that.mUrl
-            })
-        },
-    },
+  },
 }
 </script>
 
@@ -115,11 +101,28 @@ export default {
 
 .image {
   width: 100%;
-  height: 240px;
+  /* height: 240px; */
+  /* object-fit: cover; */
 }
 
-.title {
-  padding: 14px;
+.query-msg {
+  padding: 10px 0;
+	padding-left: 4px;
   font-size: 14px;
+	color: #999;
+}
+.query-input{
+	border-top: 1px solid #e8e8e8;
+	border-bottom: 1px solid #e8e8e8;
+	padding: 4px;
+	font-size: 14px;
+}
+.btn{
+	margin: 10px 0;
+	padding: 10px;
+	font-size: 16px;
+	color: #fff;
+	background-color: #666;
+	text-align: center;
 }
 </style>
